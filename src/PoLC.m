@@ -6,13 +6,14 @@ classdef PoLC
         id      % PoLC ID
         l       % Load curve vector
         ST      % Load curve sample time
-        Noise   % Noise amplitude
-        NoiseST % Noise sampling time
-        NoiseSD % Noise seed        
+        Uct     % Uncertainty [0...1]
+        Uct_sd  % Uncertainty seed  
+        % m_l   % Current load power value
     end
     
     methods
-        function obj = PoLC(name, loadCurve, load_st, amp, noise_st, seed)
+        % Object constructor
+        function obj = PoLC(name, loadCurve, load_st, uct, uct_seed)
             % Prosumer PoLC instance construction
             obj.id = name ;
             obj.l = loadCurve ;
@@ -23,26 +24,20 @@ classdef PoLC
             end
             obj.ST = load_st ;
             
-            % Check if noise amplitude value is passed
-            if ~exist('amp','var')
-                amp = 0.0001;
+            % Check if uncertainty value is passed
+            if ~exist('uct','var')
+                uct = 0.0001;
             end
-            obj.Noise = amp ;
-            
-            % Check if noise sampling time value is passed
-            if ~exist('noise_st','var')
-                noise_st = 0.001;
-            end
-            obj.NoiseST = noise_st ;
-            
-            % Check if noise seed value is passed
-            if ~exist('seed','var')
+            obj.Uct = uct ;
+                        
+            % Check if uncertainty seed value is passed
+            if ~exist('uct_seed','var')
                 rng('shuffle');
                 r = randi([1 32767],1,1);
-                seed = r;
+                uct_seed = r;
             end
-            obj.NoiseSD = seed ;
-            
+            obj.Uct_sd = uct_seed ;
+                        
         end
         
         function outputArg = method1(obj,inputArg)
